@@ -1,4 +1,6 @@
 #!/usr/bin/python3.1
+import os
+from ast import literal_eval
 #
 # Easy Python3 Dynamic DNS
 # By Jed Smith <jed@jedsmith.org> 4/29/2009
@@ -35,7 +37,7 @@
 # https://manager.linode.com/dns/resource/domain.com?id=000000
 #                                          Resource ID  ^   
 #
-RESOURCE = "000000"
+RESOURCE =  os.environ.get('RESOURCE', "000000")
 #
 #
 # Find this domain by going to the DNS Manager in Linode and then clicking
@@ -43,12 +45,12 @@ RESOURCE = "000000"
 # Number should be sitting in parentheses next to domain name.
 #
 #
-DOMAIN = "000000"
+DOMAIN = os.environ.get('DOMAIN', "000000")
 #
 # Your Linode API key.  You can generate this by going to your profile in the
 # Linode manager.  It should be fairly long.
 #
-KEY = "abcdefghijklmnopqrstuvwxyz"
+KEY = os.environ.get('KEY', "abcdefghijklmnopqrstuvwxyz")
 #
 # The URI of a Web service that returns your IP address as plaintext.  You are
 # welcome to leave this at the default value and use mine.  If you want to run
@@ -58,17 +60,14 @@ KEY = "abcdefghijklmnopqrstuvwxyz"
 #     header("Content-type: text/plain");
 #     printf("%s", $_SERVER["REMOTE_ADDR"]);
 #
-GETIP = "http://icanhazip.com/"
+GETIP = os.environ.get('GETIP', "http://icanhazip.com/")
 #
 # If for some reason the API URI changes, or you wish to send requests to a
 # different URI for debugging reasons, edit this.  {0} will be replaced with the
 # API key set above, and & will be added automatically for parameters.
 #
-API = "https://api.linode.com/api/?api_key={0}&resultFormat=JSON"
-#
-# Comment or remove this line to indicate that you edited the options above.
-#
-exit("Did you edit the options?  vi this file open.")
+API = os.environ.get('API', "https://api.linode.com/api/?api_key={0}&resultFormat=JSON")
+
 #
 # That's it!
 #
@@ -87,7 +86,7 @@ exit("Did you edit the options?  vi this file open.")
 #
 # If you want to see responses for troubleshooting, set this:
 #
-DEBUG = False
+DEBUG = literal_eval(os.environ.get('DEBUG', "True"))
 
 
 #####################
@@ -99,6 +98,12 @@ try:
 	from urllib.request import urlretrieve
 except Exception as excp:
 	exit("Couldn't import the standard library. Are you running Python 3?")
+
+try:
+	import schedule
+	import time
+except Exception as excp:
+	exit("Couldn't import schedule.")
 
 def execute(action, parameters):
 	# Execute a query and return a Python dictionary.
@@ -131,7 +136,9 @@ def ip():
 		print()
 	return open(file).read().strip()
 
-def main():
+def update_dns():
+	if DEBUG:
+		print("Running update_dns")
 	try:
 		res = execute("domainResourceGet", {"DomainID": DOMAIN, "ResourceID": RESOURCE})["DATA"]
 		res = res[0] # Turn res from a list to a dict
@@ -158,6 +165,12 @@ def main():
 		import traceback; traceback.print_exc()
 		print("FAIL {0}: {1}".format(type(excp).__name__, excp))
 		return 2
+
+def main():
+	schedule.every(1).minute.do(update_dns)
+	while True:
+		schedule.run_pending()
+		time.sleep(60)
 
 if __name__ == "__main__":
 	exit(main())
