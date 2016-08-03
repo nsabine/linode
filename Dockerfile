@@ -1,7 +1,7 @@
 FROM registry.access.redhat.com/rhscl/python-35-rhel7
 MAINTAINER Nick Sabine <nsabine@gmail.com>
 
-RUN scl enable rh-python35 "pip install schedule"
+RUN scl enable rh-python35 "pip install schedule --user"
 
 WORKDIR /code/
 COPY LinodeDynDNS.py /code/LinodeDynDNS.py
