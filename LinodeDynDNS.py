@@ -100,10 +100,10 @@ except Exception as excp:
 	exit("Couldn't import the standard library. Are you running Python 3?")
 
 try:
-	import schedule
+	import sched
 	import time
 except Exception as excp:
-	exit("Couldn't import schedule.")
+	exit("Couldn't import sched.")
 
 def execute(action, parameters):
 	# Execute a query and return a Python dictionary.
@@ -136,7 +136,7 @@ def ip():
 		print()
 	return open(file).read().strip()
 
-def update_dns():
+def update_dns(sc):
 	if DEBUG:
 		print("Running update_dns")
 	try:
@@ -165,12 +165,12 @@ def update_dns():
 		import traceback; traceback.print_exc()
 		print("FAIL {0}: {1}".format(type(excp).__name__, excp))
 		return 2
+	sc.enter(60*15, 1, update_dns, (sc,))
 
 def main():
-	schedule.every(15).minutes.do(update_dns)
-	while True:
-		schedule.run_pending()
-		time.sleep(60)
+	s = sched.scheduler(time.time, time.sleep)
+	s.enter(60*15, 1, update_dns, (s,))
+	s.run()
 
 if __name__ == "__main__":
 	exit(main())
