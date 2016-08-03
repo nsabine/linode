@@ -1,7 +1,6 @@
-FROM registry.access.redhat.com/rhel
+FROM fedora
 MAINTAINER Nick Sabine <nsabine@gmail.com>
 
-RUN yum -y install python3-pip && yym clean all
 RUN pip3 install schedule
 
 WORKDIR /code/
