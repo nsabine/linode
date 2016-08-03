@@ -1,7 +1,7 @@
 FROM python
 MAINTAINER Nick Sabine <nsabine@gmail.com>
 
-RUN pip3 install schedule
+RUN pip install schedule
 
 WORKDIR /code/
 COPY LinodeDynDNS.py /code/LinodeDynDNS.py

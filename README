@@ -1,8 +1,13 @@
 
-Linode DynDNS Updater
+Linode DynDNS Updater python script
 By Jed Smith <jed@jedsmith.org>
 
-For customers of Linode that use the Linode DNS manager.  Released into the public domain.
+Dockerfile 
+By Nick Sabine <nsabine@gmail.com>
 
-Requires Python 3.0 or above.  Python 2.6 may work.
-Contains directions in the script (which you'll have to edit anyway).
+docker build -t linodedyndns .
+docker run -e KEY=abc -e DOMAIN=000000 -e RESOURCE=000000 linodedyndns 
+
+To run in OpenShift:
+oc new-app -e KEY=abc -e DOMAIN=000000 -e RESOURCE=000000 https://github.com/nsabine/linode 
+
