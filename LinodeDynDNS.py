@@ -167,7 +167,7 @@ def update_dns():
 		return 2
 
 def main():
-	schedule.every(1).minute.do(update_dns)
+	schedule.every(15).minutes.do(update_dns)
 	while True:
 		schedule.run_pending()
 		time.sleep(60)
