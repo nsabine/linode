@@ -1,7 +1,7 @@
-FROM python
+FROM registry.access.redhat.com/rhscl/python-35-rhel7
 MAINTAINER Nick Sabine <nsabine@gmail.com>
 
-RUN pip install schedule
+RUN /opt/rh/rh-python35/root/usr/bin/pip install schedule
 
 WORKDIR /code/
 COPY LinodeDynDNS.py /code/LinodeDynDNS.py
@@ -13,4 +13,4 @@ ENV GETIP  "http://icanhazip.com/"
 ENV API "https://api.linode.com/api/?api_key={0}&resultFormat=JSON"
 ENV DEBUG "True"
 
-CMD ["python3", "/code/LinodeDynDNS.py"]
+CMD ["/opt/rh/rh-python35/root/usr/bin/python", "/code/LinodeDynDNS.py"]
