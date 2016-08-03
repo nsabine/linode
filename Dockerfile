@@ -1,7 +1,5 @@
-FROM registry.access.redhat.com/rhscl/python-35-rhel7
+FROM python
 MAINTAINER Nick Sabine <nsabine@gmail.com>
-
-RUN scl enable rh-python35 "pip install schedule --user"
 
 WORKDIR /code/
 COPY LinodeDynDNS.py /code/LinodeDynDNS.py
@@ -13,4 +11,4 @@ ENV GETIP  "http://icanhazip.com/"
 ENV API "https://api.linode.com/api/?api_key={0}&resultFormat=JSON"
 ENV DEBUG "True"
 
-CMD ["scl", "enable", "rh-python35", "python /code/LinodeDynDNS.py"]
+CMD ["python", "/code/LinodeDynDNS.py"]
