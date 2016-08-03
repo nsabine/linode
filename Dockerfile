@@ -1,7 +1,7 @@
 FROM registry.access.redhat.com/rhel
 MAINTAINER Nick Sabine <nsabine@gmail.com>
 
-RUN yum -y install python3-pip && yym clean all
+RUN yum -y install python3-pip && yum clean all
 RUN pip3 install schedule
 
 WORKDIR /code/
