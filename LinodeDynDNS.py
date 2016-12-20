@@ -107,7 +107,7 @@ except Exception as excp:
 
 def execute(action, parameters):
 	# Execute a query and return a Python dictionary.
-	uri = "{0}&action={1}".format(API.format(KEY), action)
+	uri = "{0}&api_action={1}".format(API.format(KEY), action)
 	if parameters and len(parameters) > 0:
 		uri = "{0}&{1}".format(uri, urlencode(parameters))
 	if DEBUG:
@@ -140,7 +140,7 @@ def update_dns(sc):
 	if DEBUG:
 		print("Running update_dns")
 	try:
-		res = execute("domainResourceGet", {"DomainID": DOMAIN, "ResourceID": RESOURCE})["DATA"]
+		res = execute("domain.resource.list", {"DomainID": DOMAIN, "ResourceID": RESOURCE})["DATA"]
 		res = res[0] # Turn res from a list to a dict
 		if(len(res)) == 0:
 			raise Exception("No such resource?".format(RESOURCE))
@@ -155,7 +155,7 @@ def update_dns(sc):
 				"Target": public,
 				"TTL_Sec": res["TTL_SEC"]
 			}
-			execute("domainResourceSave", request)
+			execute("domain.resource.update", request)
 			print("OK {0} -> {1}".format(old, public))
 			return 1
 		else:
@@ -168,8 +168,10 @@ def update_dns(sc):
 	sc.enter(60*15, 1, update_dns, (sc,))
 
 def main():
+	if DEBUG:
+		print("Starting Linode DNS Updater")
 	s = sched.scheduler(time.time, time.sleep)
-	s.enter(60*15, 1, update_dns, (s,))
+	s.enter(1, 1, update_dns, (s,))
 	s.run()
 
 if __name__ == "__main__":
