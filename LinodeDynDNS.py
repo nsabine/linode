@@ -1,5 +1,6 @@
 #!/usr/bin/python3.1
 import os
+import time
 from ast import literal_eval
 #
 # Easy Python3 Dynamic DNS
@@ -165,7 +166,8 @@ def update_dns(sc):
 		import traceback; traceback.print_exc()
 		print("FAIL {0}: {1}".format(type(excp).__name__, excp))
 		return 2
-	sc.enter(60*15, 1, update_dns, (sc,))
+      
+	#sc.enter(60*15, 1, update_dns, (sc,))
 
 def main():
 	if DEBUG:
@@ -173,6 +175,8 @@ def main():
 	s = sched.scheduler(time.time, time.sleep)
 	s.enter(1, 1, update_dns, (s,))
 	s.run()
+	print("Sleeping for 5 minutes")
+	time.sleep(60*5)
 
 if __name__ == "__main__":
 	exit(main())
