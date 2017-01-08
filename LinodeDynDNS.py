@@ -1,6 +1,7 @@
 #!/usr/bin/python3.1
 import os
 import time
+import sys
 from ast import literal_eval
 #
 # Easy Python3 Dynamic DNS
@@ -176,6 +177,7 @@ def main():
 	s.enter(1, 1, update_dns, (s,))
 	s.run()
 	print("Sleeping for 5 minutes")
+	sys.stdout.flush()
 	time.sleep(60*5)
 
 if __name__ == "__main__":
