@@ -11,3 +11,7 @@ docker run -e KEY=abc -e DOMAIN=000000 -e RESOURCE=000000 linodedyndns
 To run in OpenShift:
 oc new-app -e KEY=abc -e DOMAIN=000000 -e RESOURCE=000000 https://github.com/nsabine/linode 
 
+
+To run as a ScheduledJob. Note, the following is unverifed.  Waiting for OpenShift 3.4 to test.  Need to verify S2I works when combined with ScheduledJob.
+oc run linodejob -e KEY=abc -e DOMAIN=000000 -e RESOURCE=000000 --schedule="*/5 * * * *" --restart=Never --image=linode -- /bin/sh -c "python /code/LinodeDynDNS.py"
+

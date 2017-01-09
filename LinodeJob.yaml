@@ -1,0 +1,16 @@
+apiVersion: batch/v2alpha1
+kind: ScheduledJob
+metadata:
+  name: LinodeJob
+spec:
+  schedule: "*/5 * * * *"
+  ConcurrencyPolicy: "Replace"
+  jobTemplate:             
+    spec:
+      template:
+        spec:
+          containers:
+          - name: linodejob
+            image: linode
+            command: ["python",  "/code/LinodeDynDNS.py"]
+          restartPolicy: Never
